@@ -1,27 +1,67 @@
+/**
+ * Smart calculator. Priority order is observed.
+ */
 class SmartCalculator {
   constructor(initialValue) {
-    // your implementation
+    this.variable = initialValue + '';
   }
 
   add(number) {
-    // your implementation
+    this.variable += ' + ' + number;
+    return this;
   }
   
   subtract(number) {
-    // your implementation
+    this.variable += ' - ' + number;
+    return this;
   }
 
   multiply(number) {
-    // your implementation
+    this.variable += ' * ' + number;
+    return this;
   }
 
   devide(number) {
-    // your implementation
+    this.variable += ' / ' + number;
+    return this;
   }
 
   pow(number) {
-    // your implementation
+    this.variable += ' ^ ' + number;
+    return this;
   }
+
+  /**
+   * It's rather hard reproduce exponentiation operation in required order.
+   * Method splits all command line by whitespace, reproduces exponentiation operation from the end.
+   */
+  calculatePow() {
+    var arr = this.variable.split(' ');
+    
+    var n = arr.lastIndexOf('^');
+    
+    while(n > 0) {
+      var firstOperand = arr[n - 1];
+      var secondOperand = arr[n + 1];
+      var result = Math.pow(firstOperand, secondOperand);
+      arr[n - 1] = result;
+      arr[n] = '';
+      arr[n+ 1] = '';
+      n = arr.lastIndexOf('^');
+    }
+
+    this.variable = '';
+
+    for(var i = 0; i < arr.length; i++) {
+      this.variable += arr[i];
+    }
+  }
+
+}
+
+SmartCalculator.prototype.toString = function() {
+  this.calculatePow()
+  return eval(this.variable);
 }
 
 module.exports = SmartCalculator;
